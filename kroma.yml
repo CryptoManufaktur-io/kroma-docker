@@ -1,0 +1,176 @@
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+      max-file: "3"
+      tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+
+services:
+  kroma-geth:
+    restart: "unless-stopped"
+    build:
+      context: ./kroma-geth
+      dockerfile: Dockerfile.binary
+      args:
+        - DOCKER_TAG=${GETH_DOCKER_TAG}
+    image: kroma-geth:local
+    pull_policy: build
+    stop_grace_period: 50s
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - EL_EXTRAS=${EL_EXTRAS:-}
+      - NETWORK=${NETWORK}
+    volumes:
+      - kromageth-data:/var/lib/kroma-geth
+      - ./config/${NETWORK}:/var/lib/kroma-geth/config
+      - jwtsecret:/var/lib/kroma-geth/ee-secret
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - ${GETH_P2P_PORT:-30303}:${GETH_P2P_PORT:-30303}/tcp
+      - ${GETH_P2P_PORT:-30303}:${GETH_P2P_PORT:-30303}/udp
+    <<: *logging
+    entrypoint:
+      - docker-entrypoint.sh
+      - geth
+      - --datadir
+      - /var/lib/kroma-geth
+      - --circuitparams.maxtxs=0
+      - --gpo.maxprice=100000000
+      - --trace.mptwitness=1
+      - --port=${GETH_P2P_PORT:-30303}
+      - --authrpc.addr
+      - 0.0.0.0
+      - --authrpc.port
+      - "8551"
+      - --authrpc.jwtsecret
+      - /var/lib/kroma-geth/ee-secret/jwtsecret
+      - --authrpc.vhosts=*
+      - --http
+      - --http.addr
+      - 0.0.0.0
+      - --http.port
+      - ${RPC_PORT:-8545}
+      - --http.vhosts=*
+      - --http.corsdomain=*
+      - --ws
+      - --ws.addr
+      - 0.0.0.0
+      - --ws.port
+      - ${WS_PORT:-8546}
+      - --ws.origins=*
+      - --metrics
+      - --metrics.expensive
+      - --pprof
+      - --pprof.addr
+      - 0.0.0.0
+      - --syncmode
+      - full
+      - --gcmode
+      - archive
+      - --bootnodes
+      - ${GETH_BOOT_NODES}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${RPC_HOST:-kroma}.service=${RPC_HOST:-kroma}
+      - traefik.http.routers.${RPC_HOST:-kroma}.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-kroma}.rule=Host(`${RPC_HOST:-kroma}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-kroma}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${RPC_HOST:-kroma}lb.service=${RPC_HOST:-kroma}
+      - traefik.http.routers.${RPC_HOST:-kroma}lb.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-kroma}lb.rule=Host(`${RPC_LB:-kroma-lb}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-kroma}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${RPC_HOST:-kroma}.loadbalancer.server.port=${RPC_PORT:-8545}
+      - traefik.http.routers.${WS_HOST:-kromaws}.service=${WS_HOST:-kromaws}
+      - traefik.http.routers.${WS_HOST:-kromaws}.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-kromaws}.rule=Host(`${WS_HOST:-kromaws}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-kromaws}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${WS_HOST:-kromaws}lb.service=${WS_HOST:-kromaws}
+      - traefik.http.routers.${WS_HOST:-kromaws}lb.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-kromaws}lb.rule=Host(`${WS_LB:-kromaws-lb}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-kromaws}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${WS_HOST:-kromaws}.loadbalancer.server.port=${WS_PORT:-8546}
+      - metrics.scrape=true
+      - metrics.path=/debug/metrics/prometheus
+      - metrics.port=6060
+
+  kroma-node:
+    restart: "unless-stopped"
+    build:
+      context: ./kroma-node
+      dockerfile: Dockerfile.binary
+      args:
+        - DOCKER_TAG=${NODE_DOCKER_TAG}
+    image: kroma-node:local
+    pull_policy: build
+    stop_grace_period: 50s
+    user: user
+    environment:
+      - CL_EXTRAS=${CL_EXTRAS}
+    volumes:
+      - kromanode-data:/var/lib/kroma-node
+      - ./config/${NETWORK}:/var/lib/kroma-node/config
+      - jwtsecret:/var/lib/kroma-node/ee-secret
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - ${NODE_P2P_PORT:-9003}:${NODE_P2P_PORT:-9003}/tcp
+      - ${NODE_P2P_PORT:-9003}:${NODE_P2P_PORT:-9003}/udp
+    <<: *logging
+    entrypoint:
+      - docker-entrypoint.sh
+      - kroma-node
+      - --log.level
+      - ${LOG_LEVEL}
+      - --l2
+      - http://kroma-geth:8551
+      - --l2.jwt-secret
+      - /var/lib/kroma-node/ee-secret/jwtsecret
+      - --network
+      - ${NETWORK}
+      - --l1
+      - ${L1_RPC}
+      - --l1.rpckind
+      - ${L1_RPC_KIND:-basic}
+      - --rpc.addr
+      - 0.0.0.0
+      - --rpc.port
+      - ${NODE_RPC_PORT:-9545}
+      - --metrics.enabled
+      - --p2p.listen.tcp
+      - ${NODE_P2P_PORT:-9003}
+      - --p2p.priv.path
+      - /var/lib/kroma-node/p2p-node-key.txt
+      - --p2p.bootnodes
+      - ${NODE_BOOT_NODES}
+      - --syncer.l1-confs
+      - "4"
+      - --rollup.config
+      - /var/lib/kroma-node/config/rollup.json
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${NODE_HOST:-kromanode}.service=${NODE_HOST:-kromanode}
+      - traefik.http.routers.${NODE_HOST:-kromanode}.entrypoints=websecure
+      - traefik.http.routers.${NODE_HOST:-kromanode}.rule=Host(`${NODE_HOST:-kromanode}.${DOMAIN}`)
+      - traefik.http.routers.${NODE_HOST:-kromanode}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${NODE_HOST:-kromanode}lb.service=${NODE_HOST:-kromanode}
+      - traefik.http.routers.${NODE_HOST:-kromanode}lb.entrypoints=websecure
+      - traefik.http.routers.${NODE_HOST:-kromanode}lb.rule=Host(`${NODE_LB:-kromanode-lb}.${DOMAIN}`)
+      - traefik.http.routers.${NODE_HOST:-kromanode}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${NODE_HOST:-kromanode}.loadbalancer.server.port=${NODE_RPC_PORT:-9545}
+      - metrics.scrape=true
+      - metrics.path=/metrics
+      - metrics.port=7300
+
+  set-prune-marker:
+    profiles: ["tools"]
+    image: alpine:3
+    restart: "no"
+    volumes:
+      - kromageth-data:/var/lib/kroma-geth
+    entrypoint: ["/bin/sh","-c"]
+    command: /bin/sh
+
+volumes:
+  kromageth-data:
+  kromanode-data:
+  jwtsecret:
