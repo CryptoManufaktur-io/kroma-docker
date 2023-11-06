@@ -2,7 +2,7 @@ ARG DOCKER_TAG
 
 FROM kromanetwork/geth:${DOCKER_TAG}
 
-RUN apk update && apk add --no-cache ca-certificates tzdata bash su-exec
+RUN apk update && apk add --no-cache ca-certificates tzdata bash su-exec aria2
 
 RUN mkdir -p /var/lib/kroma-geth/ee-secret && chmod -R 700 /var/lib/kroma-geth \
     && chmod 777 /var/lib/kroma-geth/ee-secret
