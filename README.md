@@ -2,7 +2,7 @@
 
 Docker Compose for Kroma RPC node
 
-`cp default.env .env`, then `nano .env` and adjust values for the right network including bootnodes.
+`cp default.env .env`, then `nano .env` and adjust values for the right network including snapshot and bootnodes.
 
 Meant to be used with [central-proxy-docker](https://github.com/CryptoManufaktur-io/central-proxy-docker) for traefik
 and Prometheus remote write; use `:ext-network.yml` in `COMPOSE_FILE` inside `.env` in that case.
@@ -15,11 +15,11 @@ The `./kromad` script can be used as a quick-start:
 
 `cp default.env .env`
 
-`nano .env` and adjust variables as needed, particularly `NETWORK` and `GETH_BOOT_NODES`, `NODE_BOOT_NODES`, as well
-as `L1_RPC` and `L1_RPC_KIND`.
+`nano .env` and adjust variables as needed, particularly `NETWORK`, `SNAPSHOT, `GETH_BOOT_NODES` and `NODE_BOOT_NODES`,
+as well as `L1_RPC` and `L1_RPC_KIND`.
 
 `./kromad up`
 
 To update the software, run `./kromad update` and then `./kromad up`
 
-This is Kroma Docker v1.0.0
+This is Kroma Docker v1.1.0

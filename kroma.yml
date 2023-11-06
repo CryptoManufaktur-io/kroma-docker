@@ -21,6 +21,7 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - EL_EXTRAS=${EL_EXTRAS:-}
       - NETWORK=${NETWORK}
+      - SNAPSHOT=${SNAPSHOT}
     volumes:
       - kromageth-data:/var/lib/kroma-geth
       - ./config/${NETWORK}:/var/lib/kroma-geth/config

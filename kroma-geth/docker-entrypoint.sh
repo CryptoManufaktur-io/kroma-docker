@@ -36,6 +36,17 @@ case ${LOG_LEVEL} in
     ;;
 esac
 
+# Prep datadir
+if [ -n "${SNAPSHOT}" ] && [ ! -d "/var/lib/kroma-geth/geth/chaindata" ]; then
+  mkdir -p /var/lib/kroma-geth/snapshot
+  mkdir -p /var/lib/kroma-geth/geth
+  cd /var/lib/kroma-geth/snapshot
+  aria2c -c -x6 -s6 --auto-file-renaming=false --conditional-get=true --allow-overwrite=true "${SNAPSHOT}"
+  filename=$(echo "${SNAPSHOT}" | awk -F/ '{print $NF}')
+  tar xzvf "${filename}" -C /var/lib/kroma-geth/geth
+  rm -f "${filename}"
+fi
+
 if [ ! -d /var/lib/kroma-geth/geth/chaindata ]; then
     echo "Initializing from genesis."
 # Word splitting is desired for the command line parameters
