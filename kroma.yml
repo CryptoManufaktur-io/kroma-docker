@@ -28,8 +28,8 @@ services:
       - jwtsecret:/var/lib/kroma-geth/ee-secret
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - ${GETH_P2P_PORT:-30303}:${GETH_P2P_PORT:-30303}/tcp
-      - ${GETH_P2P_PORT:-30303}:${GETH_P2P_PORT:-30303}/udp
+      - ${GETH_P2P_PORT:-30304}:${GETH_P2P_PORT:-30304}/tcp
+      - ${GETH_P2P_DISC_PORT:-30303}:${GETH_P2P_DISC_PORT:-30303}/udp
     <<: *logging
     entrypoint:
       - docker-entrypoint.sh
@@ -39,7 +39,10 @@ services:
       - --circuitparams.maxtxs=0
       - --gpo.maxprice=100000000
       - --trace.mptwitness=1
-      - --port=${GETH_P2P_PORT:-30303}
+      - --port
+      - ${GETH_P2P_PORT:-30304}
+      - --discovery.port
+      - ${GETH_P2P_DISC_PORT:-30303}
       - --authrpc.addr
       - 0.0.0.0
       - --authrpc.port
