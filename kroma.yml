@@ -54,12 +54,16 @@ services:
       - ${RPC_PORT:-8545}
       - --http.vhosts=*
       - --http.corsdomain=*
+      - --http.api
+      - web3,eth,txpool,net,engine,kroma
       - --ws
       - --ws.addr
       - 0.0.0.0
       - --ws.port
       - ${WS_PORT:-8546}
       - --ws.origins=*
+      - --ws.api
+      - eth,txpool,net,engine,kroma
       - --metrics
       - --metrics.expensive
       - --pprof
