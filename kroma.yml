@@ -115,6 +115,7 @@ services:
     user: user
     environment:
       - CL_EXTRAS=${CL_EXTRAS}
+      - NODE_P2P_SECURITY=none
     volumes:
       - kromanode-data:/var/lib/kroma-node
       - ./config/${NETWORK}:/var/lib/kroma-node/config
