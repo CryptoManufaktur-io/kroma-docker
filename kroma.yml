@@ -115,7 +115,6 @@ services:
     user: user
     environment:
       - CL_EXTRAS=${CL_EXTRAS}
-      - NODE_P2P_SECURITY=none
     volumes:
       - kromanode-data:/var/lib/kroma-node
       - ./config/${NETWORK}:/var/lib/kroma-node/config
@@ -151,6 +150,8 @@ services:
       - /var/lib/kroma-node/p2p-node-key.txt
       - --p2p.bootnodes
       - ${NODE_BOOT_NODES}
+      - --p2p.security
+      - none
       - --syncer.l1-confs
       - "4"
       - --rollup.config
