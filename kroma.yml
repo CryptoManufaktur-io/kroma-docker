@@ -126,7 +126,7 @@ services:
     <<: *logging
     entrypoint:
       - docker-entrypoint.sh
-      - kroma-node
+      - op-node
       - --log.level
       - ${LOG_LEVEL}
       - --l2
@@ -152,7 +152,7 @@ services:
       - ${NODE_BOOT_NODES}
       - --p2p.security
       - none
-      - --syncer.l1-confs
+      - --verifier.l1-confs
       - "4"
       - --rollup.config
       - /var/lib/kroma-node/config/rollup.json
