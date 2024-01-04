@@ -15,7 +15,7 @@ The `./kromad` script can be used as a quick-start:
 
 `cp default.env .env`
 
-`nano .env` and adjust variables as needed, particularly `NETWORK`, `SNAPSHOT, `GETH_BOOT_NODES` and `NODE_BOOT_NODES`,
+`nano .env` and adjust variables as needed, particularly `NETWORK`, `SNAPSHOT`, `GETH_BOOT_NODES` and `NODE_BOOT_NODES`,
 as well as `L1_RPC` and `L1_RPC_KIND`.
 
 `./kromad up`
