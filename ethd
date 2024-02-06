@@ -577,7 +577,7 @@ version() {
         *kroma.yml* )
             docompose exec kroma-geth geth version
             echo
-            docompose exec kroma-node kroma-node --version
+            docompose exec kroma-node op-node --version
             ;;&
     esac
 }
