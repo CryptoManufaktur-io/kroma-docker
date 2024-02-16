@@ -18,12 +18,14 @@
     }
   },
   "block_time": 2,
-  "max_proposer_drift": 1200,
-  "proposer_window_size": 3600,
+  "max_sequencer_drift": 1200,
+  "seq_window_size": 3600,
   "channel_timeout": 120,
   "l1_chain_id": 11155111,
   "l2_chain_id": 2358,
   "batch_inbox_address": "0xfa79000000000000000000000000000000000001",
   "deposit_contract_address": "0x31ab8ed993a3be9aa2757c7d368dc87101a868a4",
-  "l1_system_config_address": "0x398c8ea789968893095d86cba168378a4f452e33"
+  "l1_system_config_address": "0x398c8ea789968893095d86cba168378a4f452e33",
+  "regolith_time": 0,
+  "canyon_time": 1707897600
 }
