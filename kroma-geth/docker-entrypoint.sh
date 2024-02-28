@@ -48,10 +48,21 @@ if [ -n "${SNAPSHOT}" ] && [ ! -d "/var/lib/kroma-geth/geth/chaindata" ]; then
 fi
 
 if [ ! -d /var/lib/kroma-geth/geth/chaindata ]; then
-    echo "Initializing from genesis."
+  echo "Initializing from genesis."
+  curl \
+    --fail \
+    --show-error \
+    --silent \
+    --retry-connrefused \
+    --retry-all-errors \
+    --retry 5 \
+    --retry-delay 5 \
+    https://raw.githubusercontent.com/kroma-network/kroma-up/main/config/${NETWORK}/genesis.json \
+    -o /var/lib/kroma-geth/config/genesis.json
+
 # Word splitting is desired for the command line parameters
 # shellcheck disable=SC2086
-    geth ${__verbosity} init --datadir=/var/lib/kroma-geth /var/lib/kroma-geth/config/genesis.json
+  geth ${__verbosity} init --datadir=/var/lib/kroma-geth /var/lib/kroma-geth/config/genesis.json
 fi
 
 case "${NETWORK}" in

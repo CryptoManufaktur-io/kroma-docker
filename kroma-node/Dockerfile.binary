@@ -6,8 +6,9 @@ ARG USER=user
 USER root
 RUN apk update && apk add --no-cache ca-certificates tzdata bash su-exec
 
-RUN mkdir -p /var/lib/kroma-node/ee-secret && chown -R ${USER}:${USER} /var/lib/kroma-node \
-    && chmod -R 700 /var/lib/kroma-node && chmod 777 /var/lib/kroma-node/ee-secret
+RUN mkdir -p /var/lib/kroma-node/ee-secret && mkdir -p /var/lib/kroma-node/config \
+    && chown -R ${USER}:${USER} /var/lib/kroma-node && chmod -R 700 /var/lib/kroma-node \
+    && chmod 777 /var/lib/kroma-node/ee-secret
 
 # Cannot assume buildkit, hence no chmod
 COPY --chown=${USER}:${USER} ./docker-entrypoint.sh /usr/local/bin/

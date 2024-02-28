@@ -24,7 +24,6 @@ services:
       - SNAPSHOT=${SNAPSHOT}
     volumes:
       - kromageth-data:/var/lib/kroma-geth
-      - ./config/${NETWORK}:/var/lib/kroma-geth/config
       - jwtsecret:/var/lib/kroma-geth/ee-secret
       - /etc/localtime:/etc/localtime:ro
     ports:
@@ -115,9 +114,9 @@ services:
     user: user
     environment:
       - CL_EXTRAS=${CL_EXTRAS}
+      - NETWORK=${NETWORK}
     volumes:
       - kromanode-data:/var/lib/kroma-node
-      - ./config/${NETWORK}:/var/lib/kroma-node/config
       - jwtsecret:/var/lib/kroma-node/ee-secret
       - /etc/localtime:/etc/localtime:ro
     ports:
