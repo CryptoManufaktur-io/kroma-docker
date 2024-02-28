@@ -4,7 +4,7 @@ FROM kromanetwork/node:${DOCKER_TAG}
 
 ARG USER=user
 USER root
-RUN apk update && apk add --no-cache ca-certificates tzdata bash su-exec
+RUN apk update && apk add --no-cache ca-certificates tzdata bash su-exec curl
 
 RUN mkdir -p /var/lib/kroma-node/ee-secret && mkdir -p /var/lib/kroma-node/config \
     && chown -R ${USER}:${USER} /var/lib/kroma-node && chmod -R 700 /var/lib/kroma-node \
