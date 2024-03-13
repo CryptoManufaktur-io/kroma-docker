@@ -15,7 +15,7 @@ services:
       args:
         - DOCKER_TAG=${GETH_DOCKER_TAG}
     image: kroma-geth:local
-    pull_policy: build
+    pull_policy: never
     stop_grace_period: 50s
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
@@ -109,7 +109,7 @@ services:
       args:
         - DOCKER_TAG=${NODE_DOCKER_TAG}
     image: kroma-node:local
-    pull_policy: build
+    pull_policy: never
     stop_grace_period: 50s
     user: user
     environment:
