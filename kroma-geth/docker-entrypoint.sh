@@ -57,7 +57,7 @@ if [ ! -d /var/lib/kroma-geth/geth/chaindata ]; then
     --retry-all-errors \
     --retry 5 \
     --retry-delay 5 \
-    https://raw.githubusercontent.com/kroma-network/kroma-up/main/config/${NETWORK}/genesis.json \
+    "https://raw.githubusercontent.com/kroma-network/kroma-up/main/config/${NETWORK}/genesis.json" \
     -o /var/lib/kroma-geth/config/genesis.json
 
 # Word splitting is desired for the command line parameters
