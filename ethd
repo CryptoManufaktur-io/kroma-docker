@@ -324,6 +324,26 @@ nag_os_version() {
 }
 
 
+warn_l1() {
+  var="L1_RPC"
+  value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" "${ENV_FILE}" || true)
+# Literal match intended
+# shellcheck disable=SC2076
+  if [[ "${value}" =~ "example.com" ]]; then
+    echo "Warning: Your L1 RPC (EL) is not set to a valid value. Syncing will fail."
+    echo
+  fi
+  var="L1_BEACON"
+  value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" "${ENV_FILE}" || true)
+# Literal match intended
+# shellcheck disable=SC2076
+  if [[ "${value}" =~ "example.com" ]]; then
+    echo "Warning: Your L1 Beacon (CL) is not set to a valid value. Syncing will fail."
+    echo
+  fi
+}
+
+
 # Arguments are passed, but shellcheck doesn't recognize that
 # shellcheck disable=SC2120
 update() {
@@ -410,6 +430,7 @@ find the original contents in ${ENV_FILE}.bak."
         echo
         ${__as_owner} git status --porcelain
     fi
+    warn_l1
     __during_update=0
 }
 
@@ -419,7 +440,7 @@ envmigrate() {
     fi
 
     ALL_VARS=( COMPOSE_FILE NETWORK L1_RPC L1_RPC_KIND SEQUENCER EL_EXTRAS CL_EXTRAS GETH_P2P_PORT GETH_P2P_DISC_PORT \
-            LOG_LEVEL NODE_DOCKER_TAG GETH_DOCKER_TAG DOMAIN RPC_HOST RPC_LB NODE_HOST SNAPSHOT \
+            L1_BEACON LOG_LEVEL NODE_DOCKER_TAG GETH_DOCKER_TAG DOMAIN RPC_HOST RPC_LB NODE_HOST SNAPSHOT \
             NODE_LB WS_HOST WS_LB RPC_PORT WS_PORT NODE_RPC_PORT NODE_P2P_PORT )
     OLD_VARS=( )
     NEW_VARS=( )

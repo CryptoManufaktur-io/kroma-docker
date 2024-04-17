@@ -22,7 +22,7 @@ curl \
   --retry-all-errors \
   --retry 5 \
   --retry-delay 5 \
-  https://raw.githubusercontent.com/kroma-network/kroma-up/main/config/${NETWORK}/rollup.json \
+  "https://raw.githubusercontent.com/kroma-network/kroma-up/main/config/${NETWORK}/rollup.json" \
   -o /var/lib/kroma-node/config/rollup.json
 
 # Word splitting is desired for the command line parameters
