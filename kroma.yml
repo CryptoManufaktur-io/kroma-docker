@@ -72,7 +72,7 @@ services:
       - --pprof.addr
       - 0.0.0.0
       - --syncmode
-      - full
+      - snap
       - --gcmode
       - archive
       - --bootnodes
