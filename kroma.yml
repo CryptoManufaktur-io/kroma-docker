@@ -115,6 +115,7 @@ services:
     environment:
       - CL_EXTRAS=${CL_EXTRAS}
       - NETWORK=${NETWORK}
+      - KROMAUP_TAG=${KROMAUP_TAG:-}
     volumes:
       - kromanode-data:/var/lib/kroma-node
       - jwtsecret:/var/lib/kroma-node/ee-secret
@@ -134,8 +135,8 @@ services:
       - /var/lib/kroma-node/ee-secret/jwtsecret
       - --network
       - ${NETWORK}
-      - --l1.beacon
-      - ${L1_BEACON}
+#      - --l1.beacon
+#      - ${L1_BEACON}
       - --l1
       - ${L1_RPC}
       - --l1.rpckind

@@ -14,6 +14,11 @@ fi
 
 __public_ip="--p2p.advertise.ip $(wget -qO- https://ifconfig.me/ip)"
 
+if [[ -n "${KROMAUP_TAG}" ]]; then
+  __rollup_url="https://raw.githubusercontent.com/kroma-network/kroma-up/${KROMAUP_TAG}/config/${NETWORK}/rollup.json"
+else
+  __rollup_url="https://raw.githubusercontent.com/kroma-network/kroma-up/main/config/${NETWORK}/rollup.json"
+fi
 curl \
   --fail \
   --show-error \
@@ -22,7 +27,7 @@ curl \
   --retry-all-errors \
   --retry 5 \
   --retry-delay 5 \
-  "https://raw.githubusercontent.com/kroma-network/kroma-up/main/config/${NETWORK}/rollup.json" \
+  "${__rollup_url}" \
   -o /var/lib/kroma-node/config/rollup.json
 
 # Word splitting is desired for the command line parameters
