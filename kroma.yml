@@ -135,8 +135,8 @@ services:
       - /var/lib/kroma-node/ee-secret/jwtsecret
       - --network
       - ${NETWORK}
-#      - --l1.beacon
-#      - ${L1_BEACON}
+      - --l1.beacon
+      - ${L1_BEACON}
       - --l1
       - ${L1_RPC}
       - --l1.rpckind
