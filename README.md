@@ -22,4 +22,4 @@ as well as `L1_RPC` and `L1_RPC_KIND`.
 
 To update the software, run `./kromad update` and then `./kromad up`
 
-This is Kroma Docker v4.2.0
+This is Kroma Docker v4.3.0

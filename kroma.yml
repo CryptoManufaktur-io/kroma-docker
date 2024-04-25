@@ -41,6 +41,8 @@ services:
       - --port
       - ${GETH_P2P_PORT:-30304}
       - --discovery.port
+      - --maxpeers
+      - "200"
       - ${GETH_P2P_DISC_PORT:-30303}
       - --authrpc.addr
       - 0.0.0.0
@@ -75,6 +77,8 @@ services:
       - snap
       - --gcmode
       - archive
+      - --snapshot
+      - "false"
       - --bootnodes
       - ${GETH_BOOT_NODES}
     labels:
