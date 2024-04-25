@@ -59,7 +59,7 @@ services:
       - --http.vhosts=*
       - --http.corsdomain=*
       - --http.api
-      - web3,eth,txpool,net,engine,kroma
+      - web3,eth,txpool,net,kroma
       - --ws
       - --ws.addr
       - 0.0.0.0
@@ -67,7 +67,7 @@ services:
       - ${WS_PORT:-8546}
       - --ws.origins=*
       - --ws.api
-      - eth,txpool,net,engine,kroma
+      - eth,txpool,net,kroma
       - --metrics
       - --metrics.expensive
       - --pprof
@@ -77,8 +77,7 @@ services:
       - snap
       - --gcmode
       - archive
-      - --snapshot
-      - "false"
+      - --snapshot=false
       - --bootnodes
       - ${GETH_BOOT_NODES}
     labels:
