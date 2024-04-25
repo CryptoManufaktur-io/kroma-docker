@@ -41,9 +41,9 @@ services:
       - --port
       - ${GETH_P2P_PORT:-30304}
       - --discovery.port
+      - ${GETH_P2P_DISC_PORT:-30303}
       - --maxpeers
       - "200"
-      - ${GETH_P2P_DISC_PORT:-30303}
       - --authrpc.addr
       - 0.0.0.0
       - --authrpc.port
