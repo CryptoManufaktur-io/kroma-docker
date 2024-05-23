@@ -76,7 +76,7 @@ services:
       - --syncmode
       - snap
       - --gcmode
-      - archive
+      - ${GCMODE}
       - --snapshot=false
       - --bootnodes
       - ${GETH_BOOT_NODES}
