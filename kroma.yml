@@ -74,7 +74,7 @@ services:
       - --pprof.addr
       - 0.0.0.0
       - --syncmode
-      - snap
+      - full
       - --gcmode
       - ${GCMODE}
       - --snapshot=false
