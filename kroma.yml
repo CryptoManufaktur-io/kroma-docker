@@ -103,6 +103,7 @@ services:
       - metrics.scrape=true
       - metrics.path=/debug/metrics/prometheus
       - metrics.port=6060
+      - metrics.network=kroma-${NETWORK}
 
   kroma-node:
     restart: "unless-stopped"
@@ -175,6 +176,7 @@ services:
       - metrics.scrape=true
       - metrics.path=/metrics
       - metrics.port=7300
+      - metrics.network=kroma-${NETWORK}
 
   set-prune-marker:
     profiles: ["tools"]
